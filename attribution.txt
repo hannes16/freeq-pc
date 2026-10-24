@@ -1,0 +1,15 @@
+FREEQ Preservation Port
+=======================
+
+This is an unofficial preservation port of FREEQ, created to preserve the
+game's playability and accessibility on modern computers.
+
+FREEQ was originally created by Psychic Bunny. All original game assets,
+including the story, characters, dialogue, voice performances, music, sound
+recordings, sound effects, artwork, and related intellectual property, remain
+the property of Psychic Bunny and their respective rights holders.
+
+This preservation port does not claim ownership of the original FREEQ game or
+its assets. It is not an official release and is not affiliated with or
+endorsed by Psychic Bunny.
+

@@ -1,0 +1,3 @@
+pygame==2.6.1
+prismatoid==0.16.4
+

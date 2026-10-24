@@ -1,0 +1,112 @@
+{
+  "description": "Opt-in, source-traced repairs for finished recordings stranded by unreachable conditions in the shipped iOS data. Companion overrides preserve intended low/high branch boundaries without being presented as restored recordings.",
+  "connection_overrides": {
+    "1123": {
+      "comparisons": [
+        {"origin": "JenVillain", "target_tag": null, "target_value": 3, "operation": 3},
+        {"origin": "VincentMayor", "target_tag": null, "target_value": 1, "operation": 1}
+      ],
+      "mark_restored": false,
+      "reason": "Close the final-choice gap: this feedback variant covers JenVillain <= 3 when Vincent is mayor, complementing 1311 and 1368."
+    },
+    "1131": {
+      "comparisons": [{"origin": "loveJ", "target_tag": null, "target_value": 2, "operation": 4}],
+      "mark_restored": false,
+      "reason": "Companion boundary for restored connection 1218: keep the low Vincent variant below loveJ 2."
+    },
+    "1196": {
+      "comparisons": [
+        {"origin": "JenVillain", "target_tag": null, "target_value": 3, "operation": 3},
+        {"origin": "JamesVillain", "target_tag": null, "target_value": 3, "operation": 1}
+      ],
+      "reason": "Repair JamesVillain > 3 to >= 3 for the high-villain variant."
+    },
+    "1190": {
+      "tag_changes": {"Tower2Info": 1},
+      "mark_restored": false,
+      "reason": "Restore the missing Tower 2 information handoff when Max connects to Amy at a2-tower2."
+    },
+    "1218": {
+      "comparisons": [{"origin": "loveJ", "target_tag": null, "target_value": 2, "operation": 1}],
+      "reason": "Repair the unreachable loveJ >= 3 boundary to >= 2."
+    },
+    "1252": {
+      "comparisons": [
+        {"origin": "JamesVillain", "target_tag": null, "target_value": 3, "operation": 4},
+        {"origin": "JenVillain", "target_tag": null, "target_value": 3, "operation": 3}
+      ],
+      "mark_restored": false,
+      "reason": "Companion boundary for restored connection 1196: keep the low James variant below JamesVillain 3."
+    },
+    "1267": {
+      "comparisons": [
+        {"origin": "JamesVillain", "target_tag": null, "target_value": 3, "operation": 4},
+        {"origin": "JenVillain", "target_tag": null, "target_value": 3, "operation": 3}
+      ],
+      "mark_restored": false,
+      "reason": "Companion boundary for restored connection 1196: keep the low past-James variant below JamesVillain 3."
+    },
+    "1270": {
+      "comparisons": [{"origin": "jFollow", "target_tag": null, "target_value": 2, "operation": 4}],
+      "reason": "Move the baseline boundary from jFollow < 1 to jFollow < 2."
+    },
+    "1275": {
+      "comparisons": [{"origin": "jFollow", "target_tag": null, "target_value": 1, "operation": 1}],
+      "reason": "Repair the unreachable jFollow >= 2 boundary to >= 1."
+    },
+    "1313": {
+      "comparisons": [{"origin": "jFollow", "target_tag": null, "target_value": 1, "operation": 4}],
+      "mark_restored": false,
+      "reason": "Companion boundary for restored connection 1275: keep the alternate Jen recording below jFollow 1."
+    },
+    "1356": {
+      "comparisons": [
+        {"origin": "JamesVillain", "target_tag": null, "target_value": 3, "operation": 4},
+        {"origin": "VincentSaved", "target_tag": null, "target_value": 1, "operation": 4},
+        {"origin": "LuigiSaved", "target_tag": null, "target_value": 1, "operation": 4}
+      ],
+      "mark_restored": false,
+      "reason": "Companion boundary for restored connection 1382: keep the low Amy variant below JamesVillain 3."
+    },
+    "1382": {
+      "comparisons": [
+        {"origin": "LuigiSaved", "target_tag": null, "target_value": 1, "operation": 4},
+        {"origin": "VincentSaved", "target_tag": null, "target_value": 1, "operation": 4},
+        {"origin": "JamesVillain", "target_tag": null, "target_value": 3, "operation": 1}
+      ],
+      "reason": "Repair JamesVillain > 3 to >= 3 for the high-villain variant."
+    },
+    "1402": {
+      "comparisons": [{"origin": "Tower2Info", "target_tag": null, "target_value": 1, "operation": 1}],
+      "reason": "Keep the original Tower2Info gate; it becomes reachable through the restored Max-to-Amy handoff on connection 1190."
+    },
+    "1438": {
+      "comparisons": [{"origin": "jFollow", "target_tag": null, "target_value": 2, "operation": 1}],
+      "reason": "Keep the original jFollow >= 2 gate; it becomes reachable through restored connection 1275."
+    },
+    "1492": {
+      "comparisons": [{"origin": "jFollow", "target_tag": null, "target_value": 2, "operation": 1}],
+      "mark_restored": false,
+      "reason": "Companion boundary for restored connection 1542: select this Vincent variant at jFollow 2 or higher."
+    },
+    "1504": {
+      "comparisons": [{"origin": "Tower2Info", "target_tag": null, "target_value": 1, "operation": 1}],
+      "reason": "Keep the original Tower2Info gate; it becomes reachable through the restored Max-to-Amy handoff on connection 1190."
+    },
+    "1542": {
+      "comparisons": [{"origin": "jFollow", "target_tag": null, "target_value": 2, "operation": 4}],
+      "reason": "Move the baseline boundary from jFollow < 1 to jFollow < 2."
+    },
+    "1544": {
+      "comparisons": [
+        {"origin": "jFollow", "target_tag": null, "target_value": 1, "operation": 3},
+        {"origin": "jLoyal", "target_tag": null, "target_value": 1, "operation": 4}
+      ],
+      "reason": "Repair only the unreachable jFollow boundary to <= 1 while retaining the original jLoyal < 1 gate."
+    },
+    "1558": {
+      "comparisons": [{"origin": "TowerIsGone", "target_tag": null, "target_value": 1, "operation": 1}],
+      "reason": "Remove the contradictory simultaneous TowerIsGone < 1 requirement."
+    }
+  }
+}
