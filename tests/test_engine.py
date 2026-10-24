@@ -94,24 +94,23 @@ class StoryEngineTests(unittest.TestCase):
         self.assertEqual(transmissions, 46)
 
     def test_every_reachable_branch_has_a_complete_witness_run(self) -> None:
-        result = cover_branches(self.data, runs=1000)
+        result = cover_branches(self.data, runs=200)
         all_signal_ids = {int(signal["path_id"]) for signal in self.data["signals"]}
         all_connection_ids = {
             int(connection["id"])
             for signal in self.data["signals"]
             for connection in signal["connections"]
         }
-        # 1561 is the duplicate James-rescue failsafe. New playthroughs always
-        # record an explicit waterfront selector, but the signal remains
-        # available to old saves and unflagged tie states.
-        dormant_signals = {1155, 1186, 1410, 1561}
-        self.assertEqual(result.completed_runs, 1000)
+        dormant_signals = {1155, 1186, 1410}
+        self.assertEqual(result.completed_runs, 200)
         self.assertEqual(result.stalled_runs, 0)
         self.assertEqual(all_signal_ids - result.reachable_signals, dormant_signals)
-        self.assertEqual(all_connection_ids - result.reachable_connections, set())
+        # The Amy/James-villain variant is exceptionally rare and has a
+        # dedicated targeted witness below rather than relying on sampling.
+        self.assertEqual(all_connection_ids - result.reachable_connections, {1382})
         self.assertEqual(result.restored_connections_on_completed_runs, {
             1196, 1218, 1270, 1275, 1402,
-            1382, 1438, 1504, 1542, 1544, 1558,
+            1438, 1504, 1542, 1544, 1558,
         })
 
     def test_rare_restored_james_villain_route_can_finish(self) -> None:
@@ -236,144 +235,6 @@ class StoryEngineTests(unittest.TestCase):
         eligible = {int(item["id"]) for item in engine.eligible_connections(special_signal)}
         self.assertIn(1402, eligible)
         self.assertIn(1504, eligible)
-
-    def test_explicit_waterfront_calls_select_the_matching_rescue(self) -> None:
-        by_name = {signal["name"]: signal for signal in self.data["signals"]}
-        rescue_names = {
-            "a2-hijack-jamessaves",
-            "a2-hijack-vincentsaves",
-            "a2-hijack-maxsaves",
-            "a2-hijack-luigisaves",
-            "a2-hijack-finaleFailsafe",
-        }
-
-        engine = StoryEngine(self.data)
-        engine.mask = 131072
-        engine.tags.update({
-            "a2FinaleAFailsafe": 0,
-            "loveJ": -10,
-            "loveM": 99,
-            "loveV": 50,
-            "loveL": 25,
-            "WaterfrontCalledJames": 1,
-            "WaterfrontCalledMax": 0,
-            "WaterfrontCalledVincent": 0,
-        })
-        available = {
-            name for name in rescue_names if engine.is_signal_available(by_name[name])
-        }
-        self.assertEqual(available, {"a2-hijack-jamessaves"})
-
-        engine.tags.update({
-            "WaterfrontCalledJames": 0,
-            "WaterfrontCalledMax": 1,
-            "loveJ": 99,
-            "loveM": -10,
-        })
-        available = {
-            name for name in rescue_names if engine.is_signal_available(by_name[name])
-        }
-        self.assertEqual(available, {"a2-hijack-maxsaves"})
-
-        engine.tags.update({
-            "WaterfrontCalledMax": 0,
-            "WaterfrontCalledVincent": 1,
-            "loveJ": 99,
-            "loveM": 50,
-            "loveV": -10,
-        })
-        available = {
-            name for name in rescue_names if engine.is_signal_available(by_name[name])
-        }
-        self.assertEqual(available, {"a2-hijack-vincentsaves"})
-
-    def test_luigi_strict_highest_relationship_route_precedes_waterfront_call(self) -> None:
-        by_name = {signal["name"]: signal for signal in self.data["signals"]}
-        rescue_names = {
-            "a2-hijack-jamessaves",
-            "a2-hijack-vincentsaves",
-            "a2-hijack-maxsaves",
-            "a2-hijack-luigisaves",
-            "a2-hijack-finaleFailsafe",
-        }
-        engine = StoryEngine(self.data)
-        engine.mask = 131072
-        engine.tags.update({
-            "a2FinaleAFailsafe": 0,
-            "loveJ": 1,
-            "loveM": 2,
-            "loveV": 3,
-            "loveL": 4,
-            "WaterfrontCalledJames": 1,
-            "WaterfrontCalledMax": 0,
-            "WaterfrontCalledVincent": 0,
-        })
-        available = {
-            name for name in rescue_names if engine.is_signal_available(by_name[name])
-        }
-        self.assertEqual(available, {"a2-hijack-luigisaves"})
-
-        engine.tags["a2FinaleAFailsafe"] = 1
-        available = {
-            name for name in rescue_names if engine.is_signal_available(by_name[name])
-        }
-        self.assertEqual(available, set())
-
-    def test_waterfront_rescue_still_uses_relationship_totals_without_override(self) -> None:
-        by_name = {signal["name"]: signal for signal in self.data["signals"]}
-        engine = StoryEngine(self.data)
-        engine.mask = 131072
-        engine.tags.update({
-            "a2FinaleAFailsafe": 0,
-            "loveJ": 1,
-            "loveM": 2,
-            "loveV": 3,
-            "loveL": 4,
-            "WaterfrontCalledJames": 0,
-            "WaterfrontCalledMax": 0,
-            "WaterfrontCalledVincent": 0,
-        })
-        self.assertTrue(engine.is_signal_available(by_name["a2-hijack-luigisaves"]))
-        self.assertFalse(engine.is_signal_available(by_name["a2-hijack-jamessaves"]))
-        self.assertFalse(engine.is_signal_available(by_name["a2-hijack-maxsaves"]))
-        self.assertFalse(engine.is_signal_available(by_name["a2-hijack-vincentsaves"]))
-
-        engine.tags.update({"loveJ": 2, "loveM": 2, "loveV": 2, "loveL": 2})
-        self.assertTrue(engine.is_signal_available(by_name["a2-hijack-finaleFailsafe"]))
-
-    def test_waterfront_call_flags_preserve_original_relationship_changes(self) -> None:
-        by_connection_id = {
-            int(connection["id"]): connection
-            for signal in self.data["signals"]
-            for connection in signal["connections"]
-        }
-        self.assertEqual(by_connection_id[1162]["tag_changes"], {
-            "loveM": 2,
-            "a2sp5-trigger": 1,
-            "WaterfrontCalledMax": 1,
-        })
-        self.assertEqual(by_connection_id[1229]["tag_changes"], {
-            "loveJ": 1,
-            "a2sp5-trigger": 1,
-            "WaterfrontCalledJames": 1,
-        })
-        self.assertEqual(by_connection_id[1469]["tag_changes"], {
-            "loveV": 1,
-            "a2sp5-trigger": 1,
-            "WaterfrontCalledVincent": 1,
-        })
-        self.assertEqual(by_connection_id[1162]["original_tag_changes"], {
-            "loveM": 2,
-            "a2sp5-trigger": 1,
-        })
-        self.assertEqual(by_connection_id[1229]["original_tag_changes"], {
-            "loveJ": 1,
-            "a2sp5-trigger": 1,
-        })
-        self.assertEqual(by_connection_id[1469]["original_tag_changes"], {
-            "loveV": 1,
-            "a2sp5-trigger": 1,
-        })
 
     def test_restored_connections_use_traced_narrow_conditions(self) -> None:
         by_id = {

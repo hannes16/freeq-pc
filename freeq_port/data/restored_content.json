@@ -1,26 +1,5 @@
 {
   "description": "Opt-in, source-traced repairs for finished recordings stranded by unreachable conditions in the shipped iOS data. Companion overrides preserve intended low/high branch boundaries without being presented as restored recordings.",
-  "signal_selector_overrides": [
-    {
-      "signals": [
-        "a2-hijack-jamessaves",
-        "a2-hijack-vincentsaves",
-        "a2-hijack-maxsaves",
-        "a2-hijack-luigisaves",
-        "a2-hijack-finaleFailsafe"
-      ],
-      "comparisons": [
-        {"origin": "a2FinaleAFailsafe", "target_tag": null, "target_value": 1, "operation": 4}
-      ],
-      "priority_signals": ["a2-hijack-luigisaves"],
-      "selectors": [
-        {"tag": "WaterfrontCalledJames", "signal": "a2-hijack-jamessaves"},
-        {"tag": "WaterfrontCalledMax", "signal": "a2-hijack-maxsaves"},
-        {"tag": "WaterfrontCalledVincent", "signal": "a2-hijack-vincentsaves"}
-      ],
-      "reason": "Luigi's shipped strict-highest relationship route remains first priority. Otherwise, Amy's explicit waterfront voicemail to James, Max, or Vincent selects that person's rescue; without a selector, retain all shipped relationship comparisons and the original fallback."
-    }
-  ],
   "connection_overrides": {
     "1123": {
       "comparisons": [
@@ -29,12 +8,6 @@
       ],
       "mark_restored": false,
       "reason": "Close the final-choice gap: this feedback variant covers JenVillain <= 3 when Vincent is mayor, complementing 1311 and 1368."
-    },
-    "1162": {
-      "tag_changes": {"loveM": 2, "a2sp5-trigger": 1, "WaterfrontCalledMax": 1},
-      "mark_restored": false,
-      "restoration_companion": false,
-      "reason": "Record Amy's explicit waterfront voicemail to Max so it selects the matching rescue hijack without replacing the original relationship increase."
     },
     "1131": {
       "comparisons": [{"origin": "loveJ", "target_tag": null, "target_value": 2, "operation": 4}],
@@ -52,12 +25,6 @@
       "tag_changes": {"Tower2Info": 1},
       "mark_restored": false,
       "reason": "Restore the missing Tower 2 information handoff when Max connects to Amy at a2-tower2."
-    },
-    "1229": {
-      "tag_changes": {"loveJ": 1, "a2sp5-trigger": 1, "WaterfrontCalledJames": 1},
-      "mark_restored": false,
-      "restoration_companion": false,
-      "reason": "Record Amy's explicit waterfront voicemail to James so it selects the matching rescue hijack without replacing the original relationship increase."
     },
     "1218": {
       "comparisons": [{"origin": "loveJ", "target_tag": null, "target_value": 2, "operation": 1}],
@@ -116,12 +83,6 @@
     "1438": {
       "comparisons": [{"origin": "jFollow", "target_tag": null, "target_value": 2, "operation": 1}],
       "reason": "Keep the original jFollow >= 2 gate; it becomes reachable through restored connection 1275."
-    },
-    "1469": {
-      "tag_changes": {"loveV": 1, "a2sp5-trigger": 1, "WaterfrontCalledVincent": 1},
-      "mark_restored": false,
-      "restoration_companion": false,
-      "reason": "Record Amy's explicit waterfront voicemail to Vincent so it selects the matching rescue hijack without replacing the original relationship increase."
     },
     "1492": {
       "comparisons": [{"origin": "jFollow", "target_tag": null, "target_value": 2, "operation": 1}],

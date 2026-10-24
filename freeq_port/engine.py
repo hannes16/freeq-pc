@@ -63,48 +63,7 @@ class StoryEngine:
 
     def is_signal_available(self, signal: dict[str, Any]) -> bool:
         required = int(signal.get("asa_mask", 0))
-        if (required & self.mask) != required:
-            return False
-
-        # Some authored choices identify a specific follow-up hijack even
-        # though the shipped comparison list only considers relationship
-        # totals.  Keep the original comparisons as the fallback, but honor
-        # an explicit selector when one of those choices has been made.
-        signal_name = signal.get("name", "")
-        for group in self.data.get("signal_selector_overrides", []):
-            if signal_name not in group.get("signals", []):
-                continue
-            if not self.compare(group.get("comparisons", [])):
-                return self.compare(signal.get("comparisons", []))
-
-            # Preserve any explicitly prioritized relationship route before
-            # applying a direct story-choice selector.  The waterfront group
-            # uses this for Luigi's hidden strict-highest-affinity rescue.
-            selected_priority = next(
-                (
-                    priority_name
-                    for priority_name in group.get("priority_signals", [])
-                    for priority_signal in self.data["signals"]
-                    if priority_signal.get("name") == priority_name
-                    and self.compare(priority_signal.get("comparisons", []))
-                ),
-                None,
-            )
-            if selected_priority:
-                return signal_name == selected_priority
-
-            selected_name = next(
-                (
-                    selector.get("signal")
-                    for selector in group.get("selectors", [])
-                    if int(self.tags.get(selector.get("tag", ""), 0)) > 0
-                ),
-                None,
-            )
-            if selected_name:
-                return signal_name == selected_name
-
-        return self.compare(signal.get("comparisons", []))
+        return (required & self.mask) == required and self.compare(signal.get("comparisons", []))
 
     def eligible_connections(self, signal: dict[str, Any]) -> list[dict[str, Any]]:
         result = []
@@ -245,9 +204,6 @@ def load_game_data(path: Path, *, restored_content: bool = True) -> dict[str, An
     if not overlay_path.exists():
         return data
     overlay = json.loads(overlay_path.read_text(encoding="utf-8"))
-    data["signal_selector_overrides"] = deepcopy(
-        overlay.get("signal_selector_overrides", [])
-    )
     overrides = overlay.get("connection_overrides", {})
     for signal in data["signals"]:
         for connection in signal.get("connections", []):
@@ -261,9 +217,7 @@ def load_game_data(path: Path, *, restored_content: bool = True) -> dict[str, An
                 connection["original_tag_changes"] = deepcopy(connection.get("tag_changes", {}))
                 connection["tag_changes"] = deepcopy(override["tag_changes"])
             connection["restored"] = bool(override.get("mark_restored", True))
-            connection["restoration_companion"] = bool(
-                override.get("restoration_companion", not connection["restored"])
-            )
+            connection["restoration_companion"] = not connection["restored"]
             connection["restoration_reason"] = override.get("reason", "")
     return data
 
