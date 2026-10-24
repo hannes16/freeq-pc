@@ -5,8 +5,9 @@
 This public source repository intentionally excludes the original FREEQ audio,
 images, extracted Unity data, decompiled assemblies, IPA contents, packaged
 executables, and other proprietary artifacts. Those files remain local and are
-ignored by Git. A lawful copy of the original game is required to reconstruct
-a playable build.
+ignored by Git. FREEQ is no longer commercially available; reconstructing a
+playable build requires separately supplying the original game files. This
+repository does not provide or authorize redistribution of those files.
 
 See `attribution.txt` for the preservation notice and rights attribution.
 
